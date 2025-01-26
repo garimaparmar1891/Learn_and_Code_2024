@@ -4,7 +4,7 @@ public class CustomerSearch
     {
         var searchByCountryQuery = from customer in db.customers
         where customer.Country.Contains(country) 
-        orderby c.CustomerID ascending 
+        orderby customer.CustomerID ascending 
         select customer;
         return searchByCountryQuery.ToList();
     }
@@ -28,16 +28,23 @@ public class CustomerSearch
     }
 }
 
+public class CustomerFormatter
+{
+    public string GenerateCSVRowFromCustomer(Customer customer)
+    {
+        return $"{customer.CustomerID},{customer.CompanyName},{customer.ContactName},{customer.Country}";
+    }
+}
+
 public class CustomerDataExporter
 {
-    public string ExportToCSV(List<Customer> data)
+    public string ExportToCSV(List<Customer> customerData, CustomerFormatter customerFormatter)
     {
         StringBuilder csvStringBuilder = new StringBuilder();
-        foreach (var item in data)
+        foreach (var customer in customerData)
         {
-            csvStringBuilder.AppendFormat("{0},{1}, {2}, {3}", item.CustomerID, item.CompanyName, item.ContactName, item.Country);
-            csvStringBuilder.AppendLine();
+            csvStringBuilder.AppendLine(customerFormatter.GenerateCSVRowFromCustomer(customer));
         }
-        return sb.ToString();
+        return csvStringBuilder.ToString();
     }
 }

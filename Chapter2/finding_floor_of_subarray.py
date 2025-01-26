@@ -21,9 +21,6 @@ def calculatePrefixSum(arrayElements):
         prefixSumArray[index] = prefixSumArray[index - 1] + arrayElements[index - 1]
     return prefixSumArray
 
-def calculateSubarraySum(prefixSumArray, arrayStartIndex, arrayEndIndex):
-    return prefixSumArray[arrayEndIndex] - prefixSumArray[arrayStartIndex - 1]
-
 def getQueryUserInput():
     return tuple(map(int, input().split()))
 
@@ -31,6 +28,9 @@ def calculateMeanFloorOfSubarray(prefixSumArray, arrayStartIndex, arrayEndIndex)
     subarraySum = calculateSubarraySum(prefixSumArray, arrayStartIndex, arrayEndIndex)
     subarrayLength = arrayEndIndex - arrayStartIndex + 1
     return subarraySum // subarrayLength
+
+def calculateSubarraySum(prefixSumArray, arrayStartIndex, arrayEndIndex):
+    return prefixSumArray[arrayEndIndex] - prefixSumArray[arrayStartIndex - 1]
 
 def printingResult(resultOfQueries):
     print("\n".join(map(str, resultOfQueries)))
