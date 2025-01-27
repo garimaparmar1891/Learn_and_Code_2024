@@ -32,15 +32,14 @@ def getUserInputNumber(prompt_message):
     return input(prompt_message)
 
 def validateUserInput(userInputNumber, gameConstants):
-    validInputNumber=None  
     while True:
         if isUserInputValid(userInputNumber, gameConstants["MIN_VALUE"], gameConstants["MAX_VALUE"]):
-            validInputNumber =  int(userInputNumber)
+            userInputNumber =  int(userInputNumber)
             break
         else:
             print(gameConstants["INVALID_INPUT_MESSAGE"])
             userInputNumber = getUserInputNumber(gameConstants["PROMPT_MESSAGE"])
-    return validInputNumber
+    return userInputNumber
     
 def isUserInputValid(userInputNumber, MIN_VALUE, MAX_VALUE):
     return userInputNumber.isdigit() and MIN_VALUE <= int(userInputNumber) <= MAX_VALUE
