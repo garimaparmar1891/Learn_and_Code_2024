@@ -1,4 +1,4 @@
-class BlogInfo:
+class BlogInfoDisplay:
     def display_blog_info(self, blog_data):
         print(f"\nTitle: {blog_data.title}")
         print(f"Name: {blog_data.name}")
