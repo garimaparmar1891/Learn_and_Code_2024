@@ -10,18 +10,34 @@ class CartManager:
         self.order_processor = CartOrderProcessor()
 
     def view_cart(self, user_id):
-        user_id = user_id.get("userId", 0) if isinstance(user_id, dict) else user_id
+        user_id = self._extract_user_id(user_id)
         if not user_id:
-            print("Error: Invalid user ID")
+            self._handle_invalid_user()
             return
 
-        cart_items = self.viewer.fetch_cart(user_id)
+        cart_items = self._get_cart_items(user_id)
         if not cart_items:
-            print("\nYour cart is empty.")
+            self._handle_empty_cart()
             return
 
+        self._display_cart_and_options(cart_items, user_id)
+
+    def _extract_user_id(self, user_id):
+        return user_id.get("userId", 0) if isinstance(user_id, dict) else user_id
+
+    def _handle_invalid_user(self):
+        print("Error: Invalid user ID")
+
+    def _get_cart_items(self, user_id):
+        return self.viewer.fetch_cart(user_id)
+
+    def _handle_empty_cart(self):
+        print("\nYour cart is empty.")
+
+    def _display_cart_and_options(self, cart_items, user_id):
         self.viewer.display_cart(cart_items)
         self.handle_cart_options(user_id)
+
 
     def handle_cart_options(self, user_id):
         options = {

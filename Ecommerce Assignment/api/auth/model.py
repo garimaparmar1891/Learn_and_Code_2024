@@ -6,23 +6,26 @@ class UserModel:
     def get_user_by_email(email):
         conn = get_database_connection()
         cursor = conn.cursor()
-        try:
-            cursor.execute("SELECT id, name, password FROM Users WHERE email = ?", (email,))
-            return cursor.fetchone()
-        finally:
-            cursor.close()
-            conn.close()
+        cursor.execute("SELECT id, name, password FROM Users WHERE email = ?", (email,))
+        result = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        return result
 
     @staticmethod
     def user_exists(email):
         conn = get_database_connection()
         cursor = conn.cursor()
-        try:
-            cursor.execute("SELECT id FROM Users WHERE email = ?", (email,))
-            return cursor.fetchone() is not None
-        finally:
-            cursor.close()
-            conn.close()
+    
+        cursor.execute("SELECT id FROM Users WHERE email = ?", (email,))
+        result = cursor.fetchone() is not None
+    
+        cursor.close()
+        conn.close()
+        
+        return result
 
     @staticmethod
     def create_user(name, email, password, phone, address):

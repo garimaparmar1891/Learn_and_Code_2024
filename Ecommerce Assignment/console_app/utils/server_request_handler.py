@@ -1,4 +1,5 @@
 import requests
+from http import HTTPStatus
 from config import API_URL
 from utils.check_server import is_server_available, print_server_error
 
@@ -17,7 +18,7 @@ class ServerRequestHandler:
             response = requests.post(url, json=data) if data else requests.get(url)
             response_data = response.json()
 
-            if response.status_code in [200, 201]:
+            if response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]:
                 return response_data
             else:
                 print(f"Error: {response_data.get('error', 'Invalid request')}")

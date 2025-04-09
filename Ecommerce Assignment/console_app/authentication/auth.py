@@ -4,8 +4,8 @@ from authentication.login_manager import LoginManager
 
 class Auth:
     def __init__(self):
-        self.signup_manager = SignupManager()
-        self.login_manager = LoginManager()
+        self.signup = SignupManager()
+        self.login = LoginManager()
 
     def handle_session(self):
         while True:
@@ -13,9 +13,9 @@ class Auth:
                 "\n1. Signup\n2. Login\n3. Exit\nChoose an option: ", ["1", "2", "3"]
             )
             if choice == "1":
-                return self.signup_manager.signup()
+                return self.signup.signup()
             elif choice == "2":
-                return self.login_manager.login()
+                return self.login.login()
             elif choice == "3":
                 print("Exiting program...")
                 return True

@@ -1,4 +1,5 @@
 import requests
+from http import HTTPStatus
 from config import API_URL
 from utils.check_server import print_server_error
 
@@ -7,7 +8,9 @@ class OrderAPIHandler:
     def send_get_request(endpoint, params=None):
         try:
             response = requests.get(f"{API_URL}/{endpoint}", params=params)
-            return response.json() if response.status_code == 200 else []
+            if response.status_code == HTTPStatus.OK:
+                return response.json()
+            return []
         except requests.exceptions.RequestException:
             print_server_error()
             return []
@@ -16,7 +19,10 @@ class OrderAPIHandler:
     def send_post_request(endpoint, data=None):
         try:
             response = requests.post(f"{API_URL}/{endpoint}", json=data)
-            return response.json() if response.status_code in [200, 201] else {"error": "Request failed"}
+            if response.status_code in [HTTPStatus.OK, HTTPStatus.CREATED]:
+                return response.json()
+            return {"error": "Request failed"}
         except requests.exceptions.RequestException:
             print_server_error()
             return {"error": "Request failed"}
+

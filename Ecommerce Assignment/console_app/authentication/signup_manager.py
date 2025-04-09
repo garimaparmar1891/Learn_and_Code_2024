@@ -3,19 +3,17 @@ from utils.server_request_handler import ServerRequestHandler
 
 class SignupManager:
     def signup(self):
-        if not ServerRequestHandler.check_server():
-            return False
+        response_data = None
 
-        user_data = self.get_signup_fields()
-        if not user_data:
-            return None
+        if ServerRequestHandler.check_server():
+            user_data = self.get_signup_fields()
+            if user_data:
+                response = ServerRequestHandler.send_request("signup", user_data)
+                if response:
+                    print("\nUser Registered Successfully! Please log in.\n")
 
-        response = ServerRequestHandler.send_request("signup", user_data)
-        if response:
-            print("\nUser Registered Successfully! Please log in.\n")
-            return None
-        return None
-    
+        return response_data
+
     @staticmethod
     def get_signup_fields():
         return {

@@ -3,20 +3,17 @@ from utils.server_request_handler import ServerRequestHandler
 
 class LoginManager:
     def login(self):
-        if not ServerRequestHandler.check_server():
-            return False
+        response_data = None
 
-        credentials = self.get_login_fields()
-        if not credentials:
-            return None
+        if ServerRequestHandler.check_server():
+            credentials = self.get_login_fields()
+            if credentials:
+                response_data = ServerRequestHandler.send_request("login", credentials)
+                if response_data:
+                    print(f"\nWelcome {response_data['userName']} !!")
 
-        response_data = ServerRequestHandler.send_request("login", credentials)
-        if response_data:
-            print(f"\nWelcome {response_data['userName']} !!")
-            return response_data
-        else:
-            return None
-        
+        return response_data
+
     @staticmethod
     def get_login_fields():
         return {

@@ -9,14 +9,14 @@ class SessionManager:
             choice = input("\n1. Signup\n2. Login\n3. Exit\nChoose an option: ").strip()
 
             if choice == "1":
-                user = self.auth.signup_manager.signup()
+                user = self.auth.signup.signup()
             elif choice == "2":
-                user = self.auth.login_manager.login()
+                user = self.auth.login.login()
             elif choice == "3":
-                return None
+                return {"status": "exit"}
             else:
                 print("Invalid choice. Please try again.")
                 continue
 
             if user is not None:
-                return user  # Return user data on successful login/signup
+                return user 
