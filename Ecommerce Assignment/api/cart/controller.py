@@ -12,12 +12,12 @@ class CartController:
         if not all([user_id, product_name, quantity]):
             return jsonify({"error": "Missing required fields"}), HTTPStatus.BAD_REQUEST
 
-        response, status = CartService.add_to_cart(user_id, product_name, quantity)
+        response, status = CartService.add_product_to_cart(user_id, product_name, quantity)
         return jsonify(response), HTTPStatus(status)
 
     @staticmethod
     def get_cart(user_id):
-        response, status = CartService.view_cart(user_id)
+        response, status = CartService.get_cart(user_id)
         return jsonify(response), HTTPStatus(status)
 
     @staticmethod
@@ -29,5 +29,5 @@ class CartController:
         if not all([user_id, product_name, quantity_to_remove]):
             return jsonify({"error": "Missing required fields"}), HTTPStatus.BAD_REQUEST
 
-        response, status = CartService.remove_from_cart(user_id, product_name, quantity_to_remove)
+        response, status = CartService.remove_product_from_cart(user_id, product_name, quantity_to_remove)
         return jsonify(response), HTTPStatus(status)

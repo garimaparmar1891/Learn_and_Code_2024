@@ -3,6 +3,21 @@ from http import HTTPStatus
 
 class CartModel:
     @staticmethod
+    def get_product_id(product_name):
+        query = "SELECT id FROM Products WHERE name = ?"
+        result = CartModel._execute_select_query(query, (product_name,))
+        return result[0] if result else None
+
+    @staticmethod
+    def add_product_to_cart(user_id, product_id, quantity):
+        existing_quantity = CartModel._get_existing_quantity(user_id, product_id)
+
+        if existing_quantity is not None:
+            return CartModel._update_cart_quantity(user_id, product_id, quantity)
+        else:
+            return CartModel._insert_new_cart_item(user_id, product_id, quantity)
+
+    @staticmethod
     def get_cart_items(user_id):
         query = """
             SELECT p.name, c.quantity, p.price, c.added_at
@@ -13,19 +28,23 @@ class CartModel:
         return CartModel._execute_select_query(query, (user_id,))
 
     @staticmethod
-    def get_product_id(product_name):
-        query = "SELECT id FROM Products WHERE name = ?"
-        result = CartModel._execute_select_query(query, (product_name,))
-        return result[0] if result else None
-
-    @staticmethod
-    def add_to_cart(user_id, product_id, quantity):
+    def remove_product_from_cart(user_id, product_id, quantity_to_remove):
         existing_quantity = CartModel._get_existing_quantity(user_id, product_id)
 
-        if existing_quantity is not None:
-            return CartModel._update_cart_quantity(user_id, product_id, quantity)
+        if existing_quantity is None:
+            return {"error": "Product not found in cart"}, HTTPStatus.NOT_FOUND
+
+        if quantity_to_remove >= existing_quantity:
+            query = "DELETE FROM Cart WHERE user_id = ? AND product_id = ?"
+            params = (user_id, product_id)
+            message = "Product removed from cart completely!"
         else:
-            return CartModel._insert_new_cart_item(user_id, product_id, quantity)
+            query = "UPDATE Cart SET quantity = quantity - ? WHERE user_id = ? AND product_id = ?"
+            params = (quantity_to_remove, user_id, product_id)
+            message = f"Updated cart: {existing_quantity - quantity_to_remove} items left"
+
+        success = CartModel._execute_commit_query(query, params)
+        return ({"message": message}, HTTPStatus.OK) if success else ({"error": "Internal server error"}, HTTPStatus.INTERNAL_SERVER_ERROR)
 
     @staticmethod
     def _execute_select_query(query, params):
@@ -70,22 +89,4 @@ class CartModel:
         finally:
             cursor.close()
             conn.close() 
-
-    @staticmethod
-    def remove_from_cart(user_id, product_id, quantity_to_remove):
-        existing_quantity = CartModel._get_existing_quantity(user_id, product_id)
-
-        if existing_quantity is None:
-            return {"error": "Product not found in cart"}, HTTPStatus.NOT_FOUND
-
-        if quantity_to_remove >= existing_quantity:
-            query = "DELETE FROM Cart WHERE user_id = ? AND product_id = ?"
-            params = (user_id, product_id)
-            message = "Product removed from cart completely!"
-        else:
-            query = "UPDATE Cart SET quantity = quantity - ? WHERE user_id = ? AND product_id = ?"
-            params = (quantity_to_remove, user_id, product_id)
-            message = f"Updated cart: {existing_quantity - quantity_to_remove} items left"
-
-        success = CartModel._execute_commit_query(query, params)
-        return ({"message": message}, HTTPStatus.OK) if success else ({"error": "Internal server error"}, HTTPStatus.INTERNAL_SERVER_ERROR)
+   

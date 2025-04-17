@@ -3,8 +3,8 @@ from .model import CategoryModel
 
 class CategoryService:
     @staticmethod
-    def fetch_categories():
-        categories = CategoryModel.get_all_categories()
+    def get_categories():
+        categories = CategoryModel.get_categories()
 
         if not categories:
             return {"message": "No categories found"}, HTTPStatus.OK

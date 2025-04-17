@@ -3,18 +3,6 @@ import bcrypt
 
 class UserModel:
     @staticmethod
-    def get_user_by_email(email):
-        conn = get_database_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT id, name, password FROM Users WHERE email = ?", (email,))
-        result = cursor.fetchone()
-
-        cursor.close()
-        conn.close()
-
-        return result
-
-    @staticmethod
     def user_exists(email):
         conn = get_database_connection()
         cursor = conn.cursor()
@@ -26,7 +14,7 @@ class UserModel:
         conn.close()
         
         return result
-
+    
     @staticmethod
     def create_user(name, email, password, phone, address):
         hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
@@ -45,3 +33,16 @@ class UserModel:
         finally:
             cursor.close()
             conn.close()
+
+    @staticmethod
+    def get_user_by_email(email):
+        conn = get_database_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT id, name, password FROM Users WHERE email = ?", (email,))
+        result = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        return result

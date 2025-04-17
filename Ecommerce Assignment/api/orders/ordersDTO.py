@@ -1,6 +1,4 @@
-# dto/order_dto.py
 from dataclasses import dataclass
-# from typing import List
 
 @dataclass
 class OrderResponseDTO:

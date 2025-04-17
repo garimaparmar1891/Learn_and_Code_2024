@@ -61,6 +61,18 @@ class OrderModel:
         """
 
     @staticmethod
+    def _execute_fetch_one(query, params):
+        conn = get_database_connection()
+        cursor = conn.cursor()
+     
+        cursor.execute(query, params)
+        result = cursor.fetchone()[0]
+    
+        cursor.close()
+        conn.close()
+        return result
+    
+    @staticmethod
     def _get_insert_order_query():
         return "INSERT INTO Orders (user_id, total_amount, order_date) VALUES (?, ?, ?)"
 
@@ -95,18 +107,6 @@ class OrderModel:
             WHERE o.user_id = ?
             ORDER BY o.order_date DESC
         """
-    
-    @staticmethod
-    def _execute_fetch_one(query, params):
-        conn = get_database_connection()
-        cursor = conn.cursor()
-     
-        cursor.execute(query, params)
-        result = cursor.fetchone()[0]
-    
-        cursor.close()
-        conn.close()
-        return result
 
     @staticmethod
     def _execute_fetch_all(query, params):

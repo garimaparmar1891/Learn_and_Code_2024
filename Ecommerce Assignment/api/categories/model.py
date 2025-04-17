@@ -2,12 +2,14 @@ from database import get_database_connection
 
 class CategoryModel:
     @staticmethod
-    def get_all_categories():
+    def get_categories():
         conn = get_database_connection()
         cursor = conn.cursor()
-        try:
-            cursor.execute("SELECT id, name FROM categories")
-            return cursor.fetchall()
-        finally:
-            cursor.close()
-            conn.close()
+        
+        cursor.execute("SELECT id, name FROM categories")
+        result = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return result

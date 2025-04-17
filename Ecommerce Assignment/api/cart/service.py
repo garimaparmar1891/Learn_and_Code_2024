@@ -4,13 +4,13 @@ from .cartDTO import cartDTO
 
 class CartService:
     @staticmethod
-    def add_to_cart(user_id, product_name, quantity):
+    def add_product_to_cart(user_id, product_name, quantity):
         product = CartModel.get_product_id(product_name)
         if not product:
             return {"error": "Product not found"}, HTTPStatus.NOT_FOUND
 
         product_id = product[0]
-        success = CartModel.add_to_cart(user_id, product_id, quantity)
+        success = CartModel.add_product_to_cart(user_id, product_id, quantity)
         return (
             {"message": "Product added to cart successfully!"}, HTTPStatus.OK
         ) if success else (
@@ -18,7 +18,7 @@ class CartService:
         )
 
     @staticmethod
-    def view_cart(user_id):
+    def get_cart(user_id):
         cart_items = CartModel.get_cart_items(user_id)
         if not cart_items:
             return {"message": "Your cart is empty"}, HTTPStatus.OK
@@ -28,10 +28,10 @@ class CartService:
         return {"cart": cart_list}, HTTPStatus.OK
 
     @staticmethod
-    def remove_from_cart(user_id, product_name, quantity_to_remove):
+    def remove_product_from_cart(user_id, product_name, quantity_to_remove):
         product = CartModel.get_product_id(product_name)
         if not product:
             return {"error": "Product not found"}, HTTPStatus.NOT_FOUND
 
         product_id = product[0]
-        return CartModel.remove_from_cart(user_id, product_id, quantity_to_remove)
+        return CartModel.remove_product_from_cart(user_id, product_id, quantity_to_remove)

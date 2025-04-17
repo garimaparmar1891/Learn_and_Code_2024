@@ -25,7 +25,7 @@ class OrderService:
         return response_dto.__dict__, HTTPStatus.OK
 
     @staticmethod
-    def fetch_order_history(user_id):
+    def order_history(user_id):
         orders = OrderModel.get_order_history(user_id)
         if not orders:
             return {"message": "No orders found"}, HTTPStatus.OK
