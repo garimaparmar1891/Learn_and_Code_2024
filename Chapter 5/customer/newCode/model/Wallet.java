@@ -1,16 +1,25 @@
+package model;
+
 public class Wallet {
     private float balance;
 
-    public Wallet(float initialValue) {
-        this.balance = initialValue;
+    public Wallet(float initialAmount) {
+        this.balance = initialAmount;
     }
 
-    public float getBalance() { return balance; }
-    public void setBalance(float newValue) { this.balance = newValue; }
-    public void deposit(float amount) { this.balance += amount; }
-    public void withdraw(float amount) { this.balance -= amount; }
+    public float getBalance() {
+        return balance;
+    }
 
-    public boolean hasSufficientBalance(float amount) {
-        return this.balance >= amount;
+    public boolean debit(float amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    public void credit(float amount) {
+        balance += amount;
     }
 }
