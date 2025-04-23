@@ -44,6 +44,5 @@ class TumblerApplication:
         except ValueError:
             raise ValueError("Invalid format. Please enter the range in 'start-end' format.")
 
-
 if __name__ == "__main__":
     TumblerApplication.main()
