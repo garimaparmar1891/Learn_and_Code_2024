@@ -11,16 +11,31 @@ class CartManager:
 
     def view_cart(self, user_id):
         user_id = self._extract_user_id(user_id)
-        if not user_id:
-            self._handle_invalid_user()
+        if not self._validate_user(user_id):
             return
 
         cart_items = self._get_cart_items(user_id)
-        if not cart_items:
-            self._handle_empty_cart()
+        if not self._validate_cart(cart_items):
             return
 
-        self._display_cart_and_options(cart_items, user_id)
+        self._process_cart_display(cart_items, user_id)
+
+    def _validate_user(self, user_id):
+        if not user_id:
+            self._handle_invalid_user()
+            return False
+        return True
+
+    def _validate_cart(self, cart_items):
+        if not cart_items:
+            self._handle_empty_cart()
+            return False
+        return True
+
+    def _process_cart_display(self, cart_items, user_id):
+        self.viewer.display_cart(cart_items)
+        self.handle_cart_options(user_id)
+
 
     def _extract_user_id(self, user_id):
         return user_id.get("userId", 0) if isinstance(user_id, dict) else user_id

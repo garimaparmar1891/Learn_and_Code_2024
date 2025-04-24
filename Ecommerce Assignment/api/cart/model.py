@@ -89,4 +89,3 @@ class CartModel:
         finally:
             cursor.close()
             conn.close() 
-   
